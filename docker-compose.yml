@@ -1,0 +1,9 @@
+---
+daemon:
+#  build: .
+  image: quay.io/kwiksand/dasd:latest
+  ports:
+   - "9998:9998"
+   - "9999:9999"
+  volumes:
+   - /media/crypto/das:/home/das/.das

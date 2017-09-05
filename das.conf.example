@@ -1,0 +1,10 @@
+
+#daemon=1
+rpcuser=eternityrpc
+rpcpassword=CHANGE_PASSWORD
+server=1
+listen=1
+rpcport=9998
+port=9999
+rpcallowip=127.0.0.1
+
