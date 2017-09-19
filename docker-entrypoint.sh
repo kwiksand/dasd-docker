@@ -1,28 +1,38 @@
-#!/bin/sh
+#!/bin/bash
+
 set -e
 DAS_DATA=/home/das/.das
-cd /home/das/dasd
+CONFIG_FILE=das.conf
 
-if [ $(echo "$1" | cut -c1) = "-" ]; then
-  echo "$0: assuming arguments for dasd"
+if [ -z $1 ] || [ "$1" == "dasd" ] || [ $(echo "$1" | cut -c1) == "-" ]; then
+  cmd=dasd
+  shift
 
-  set -- dasd "$@"
-fi
+  if [ ! -d $DAS_DATA ]; then
+    echo "$0: DATA DIR ($DAS_DATA) not found, please create and add config.  exiting...."
+    exit 1
+  fi
 
-if [ $(echo "$1" | cut -c1) = "-" ] || [ "$1" = "dasd" ]; then
-  mkdir -p "$DAS_DATA"
+  if [ ! -f $DAS_DATA/$CONFIG_FILE ]; then
+    echo "$0: dasd config ($DAS_DATA/$CONFIG_FILE) not found, please create.  exiting...."
+    exit 1
+  fi
+
   chmod 700 "$DAS_DATA"
   chown -R das "$DAS_DATA"
 
-  echo "$0: setting data directory to $DAS_DATA"
+  if [ -z $1 ] || [ $(echo "$1" | cut -c1) == "-" ]; then
+    echo "$0: assuming arguments for dasd"
 
-  set -- "$@" -datadir="$DAS_DATA"
-fi
+    set -- $cmd "$@" -datadir="$DAS_DATA"
+  else
+    set -- $cmd -datadir="$DAS_DATA"
+  fi
 
-if [ "$1" = "dasd" ] || [ "$1" = "das-cli" ] || [ "$1" = "das-tx" ]; then
-  echo
   exec gosu das "$@"
-fi
+elif [ "$1" == "das-cli" ] || [ "$1" == "das-tx" ]; then
 
-echo
-exec "$@"
+  exec gosu das "$@"
+else
+  echo "This entrypoint will only execute dasd, das-cli and das-tx"
+fi

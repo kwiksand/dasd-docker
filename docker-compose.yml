@@ -3,7 +3,7 @@ daemon:
 #  build: .
   image: quay.io/kwiksand/dasd:latest
   ports:
-   - "9998:9998"
-   - "9999:9999"
+  - "9978:9978"
+  - "9399:9399"
   volumes:
-   - /media/crypto/das:/home/das/.das
+  - /media/crypto/das:/home/das/.das
