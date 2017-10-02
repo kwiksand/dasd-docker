@@ -2,7 +2,7 @@ FROM quay.io/kwiksand/cryptocoin-base:latest
 
 RUN useradd -m das
 
-ENV DAEMON_RELEASE="DAS-v0.12.2"
+ENV DAEMON_RELEASE="DAS-v0.12.1.5"
 ENV DAS_DATA=/home/das/.das
 
 USER das
@@ -34,7 +34,8 @@ USER root
 COPY docker-entrypoint.sh /entrypoint.sh
 
 RUN chmod 777 /entrypoint.sh && \
-    echo "\n# Some aliases to make the das clients/tools easier to access\nalias dasd='/usr/bin/dasd -conf=/home/das/.das/das.conf'\nalias das-cli='/usr/bin/das-cli -conf=/home/das/.das/das.conf'\n" >> /root/.bashrc && \
+    echo "\n# Some aliases to make the das clients/tools easier to access\nalias dasd='/usr/bin/dasd -conf=/home/das/.das/das.conf'\nalias das-cli='/usr/bin/das-cli -conf=/home/das/.das/das.conf'\n\n[ ! -z \"\$TERM\" -a -r /etc/motd ] && cat /etc/motd" >> /etc/bash.bashrc && \
+    echo "Das (DAS) Cryptocoin Daemon\n\nUsage:\n das-cli help - List help options\n das-cli listtransactions - List Transactions\n\n" > /etc/motd && \
     chmod 755 /home/das/bin/dasd && \
     chmod 755 /home/das/bin/das-cli && \
     chmod 755 /home/das/bin/das-tx && \
